@@ -44,7 +44,7 @@ jobs:
     env:
       PARENT_REPOSITORY: 'org/example-repository'
       CHECKOUT_BRANCH: 'main'
-      PR_AGAINST_BRNACH: 'main'
+      PR_AGAINST_BRANCH: 'main'
       OWNER: 'org'
 
     steps:
@@ -64,6 +64,6 @@ jobs:
           github_token: ${{ secrets.RELEASE_HUB_SECRET }}
           parent_repository: ${{ env.PARENT_REPOSITORY }}
           checkout_branch: ${{ env.CHECKOUT_BRANCH}}
-          pr_against_branch: ${{ env.PR_AGAINST_BRNACH }}
+          pr_against_branch: ${{ env.PR_AGAINST_BRANCH }}
           owner: ${{ env.OWNER }}
 ```
