@@ -11,7 +11,7 @@ jobs:
     env:
       PARENT_REPOSITORY: 'dustyspace/example-voting-submodules'
       CHECKOUT_BRANCH: 'releasehub-integration'
-      PR_AGAINST_BRNACH: 'releasehub-integration'
+      PR_AGAINST_BRANCH: 'releasehub-integration'
       OWNER: 'dustyspace'
     steps:
     - uses: actions/checkout@v2
@@ -22,5 +22,5 @@ jobs:
         github_token: ${{ secrets.RELEASE_HUB_SECRET }}
         parent_repository: ${{ env.PARENT_REPOSITORY }}
         checkout_branch: ${{ env.CHECKOUT_BRANCH}}
-        pr_against_branch: ${{ env.PR_AGAINST_BRNACH }}
+        pr_against_branch: ${{ env.PR_AGAINST_BRANCH }}
         owner: ${{ env.OWNER }}
