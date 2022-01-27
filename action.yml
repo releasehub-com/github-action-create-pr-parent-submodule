@@ -1,0 +1,83 @@
+name: 'Github Action Submodule Sync'
+description: 'Update submodules and creates new pull request against parent repository'
+author: 'releasehub'
+
+branding:
+  icon: 'git-pull-request'
+  color: 'yellow'
+
+inputs:
+  github_token:
+    description: 'Github Token'
+    required: true
+  checkout_branch:
+    description: 'Branch to checkout'
+    required: false
+    default: 'main'
+  pr_against_branch:
+    description: 'Parent branch'
+    required: true
+  parent_repository:
+    description: 'Parent Repository'
+    required: true
+  owner:
+    description: 'Owner'
+    required: true
+  label:
+    description: 'Create Release Environment label'
+    required: false
+    default: 'Create Release Environment'
+  
+runs:
+  using: 'composite'
+  steps:
+  - name: Checkout parent repository and branch
+    uses: actions/checkout@v2
+    with:
+      token: ${{ inputs.github_token }}
+      repository: ${{ inputs.parent_repository }}
+      ref: ${{ inputs.checkout_branch }}
+      submodules: true
+      fetch-depth: 0
+
+  - name: Create new branch and push changes
+    shell: bash
+    run: |
+      git config user.name github-actions
+      git config user.email github-actions@github.com
+      git submodule update --remote
+      git checkout -b $GITHUB_RUN_ID
+      git commit -am "updating submodules"
+      git push --set-upstream origin $GITHUB_RUN_ID
+
+  - name: Create pull request against target branch
+    uses: actions/github-script@v5
+    with:
+      github-token: ${{ inputs.github_token }}
+      script: |
+        await github.rest.pulls.create({
+          owner: '${{ inputs.owner }}',
+          repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
+          head: process.env.GITHUB_RUN_ID,
+          base: '${{ inputs.pr_against_branch }}',
+          title: `[Auto-generated] Submodule Updates ${process.env.GITHUB_RUN_ID}`,
+          body: `[Auto-generated] Submodule Updates ${process.env.GITHUB_RUN_ID}`,
+        });
+
+  - name: Add labels
+    uses: actions/github-script@v5
+    with:
+      github-token: ${{ inputs.github_token }}
+      script: |
+        const res = await github.rest.issues.listForRepo({
+          owner: '${{ inputs.owner }}',
+          repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
+        });
+        const pr = res.data.filter(i => i.title.includes(process.env.GITHUB_RUN_ID));
+        const prNumber = pr[0].number;  
+        await github.rest.issues.addLabels({
+          issue_number: prNumber,
+          owner: '${{ inputs.owner }}',
+          repo: '${{ inputs.parent_repository }}'.split('/')[1].trim(),
+          labels: ['${{ inputs.label }}']
+        });
