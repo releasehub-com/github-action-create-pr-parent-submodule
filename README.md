@@ -4,7 +4,7 @@ This GitHub action creates a new branch and pull request against the parent repo
 
 **The end goal of this tool:**
 
-- Create a new branch on the parent repository and get all submodules update recursively
+- Create a new branch on the parent repository and get all submodules updates
 - Create a pull request from newly created branch
 - Add a custom label to the pull request
 
