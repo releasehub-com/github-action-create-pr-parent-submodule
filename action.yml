@@ -1,4 +1,4 @@
-name: 'Github Action Submodule Sync'
+name: 'GitHub Action Submodule Updates'
 description: 'Update submodules and creates new pull request against parent repository'
 author: 'releasehub'
 
