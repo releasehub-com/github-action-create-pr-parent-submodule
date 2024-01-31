@@ -32,7 +32,7 @@ runs:
   using: 'composite'
   steps:
   - name: Checkout parent repository and branch
-    uses: actions/checkout@v2
+    uses: actions/checkout@v3
     with:
       token: ${{ inputs.github_token }}
       repository: ${{ inputs.parent_repository }}
@@ -51,7 +51,7 @@ runs:
       git push --set-upstream origin $GITHUB_RUN_ID
 
   - name: Create pull request against target branch
-    uses: actions/github-script@v5
+    uses: actions/github-script@v7
     with:
       github-token: ${{ inputs.github_token }}
       script: |
@@ -65,7 +65,7 @@ runs:
         });
 
   - name: Add labels
-    uses: actions/github-script@v5
+    uses: actions/github-script@v7
     with:
       github-token: ${{ inputs.github_token }}
       script: |
