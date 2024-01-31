@@ -32,7 +32,7 @@ runs:
   using: 'composite'
   steps:
   - name: Checkout parent repository and branch
-    uses: actions/checkout@v3
+    uses: actions/checkout@v4
     with:
       token: ${{ inputs.github_token }}
       repository: ${{ inputs.parent_repository }}
